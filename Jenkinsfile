@@ -12,9 +12,11 @@ pipeline {
         stage('Test') {
             steps {
                 echo '🧪 Running Tests...'
+                sh 'pip install pytest'
                 sh 'pytest'
             }
         }
+
 
         stage('Code Quality') {
             steps {
