@@ -12,16 +12,11 @@ pipeline {
         stage('Test') {
             steps {
                 echo '🧪 Running Tests...'
-                script {
-                    def workspace = pwd().replaceAll('\\\\', '/')
-                    sh """
-                        docker run --rm -v "${workspace}:/app" -w /app python:3.10-slim bash -c "pip install pytest && pytest"
-                    """
-                }
+                sh '''
+                    docker run --rm -v "%WORKSPACE%":/app -w /app python:3.10-slim bash -c "pip install pytest && pytest"
+                '''
             }
         }
-
-
 
 
         stage('Code Quality') {
