@@ -12,10 +12,10 @@ pipeline {
         stage('Test') {
             steps {
                 echo '🧪 Running Tests...'
-                sh 'pip install pytest'
-                sh 'pytest'
+                sh 'docker run --rm -v "$PWD":/app -w /app python:3.10-slim bash -c "pip install pytest && pytest"'
             }
         }
+
 
 
         stage('Code Quality') {
