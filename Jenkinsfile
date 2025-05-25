@@ -10,24 +10,27 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                echo '🧪 Running Tests...'
-                script {
-                    def windowsPath = pwd()
-                    def dockerPath = windowsPath.replaceAll('^([A-Z]):\\\\', '/$1/').replaceAll('\\\\', '/').toLowerCase()
+    steps {
+        echo '🧪 Running Tests...'
+        script {
+            def windowsPath = pwd()
+            def dockerPath = windowsPath.replaceAll('^([A-Z]):\\\\', '/$1/').replaceAll('\\\\', '/').toLowerCase()
 
-                    sh '''docker build -t garage-test-image - <<EOF
-        FROM python:3.10-slim
-        WORKDIR /app
-        COPY . .
-        RUN pip install pytest
-        CMD ["pytest"]
-        EOF'''
+            sh '''#!/bin/bash
+docker build -t garage-test-image - <<EOF
+FROM python:3.10-slim
+WORKDIR /app
+COPY . .
+RUN pip install pytest
+CMD ["pytest"]
+EOF
+'''
 
-                    sh "docker run --rm -v ${dockerPath}:/app -w /app garage-test-image"
-                }
-            }
+            sh "docker run --rm -v ${dockerPath}:/app -w /app garage-test-image"
         }
+    }
+}
+
 
 
 
