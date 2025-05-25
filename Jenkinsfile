@@ -26,7 +26,7 @@ CMD ["pytest"]
 EOF
 '''
 
-            sh "docker run --rm -v ${dockerPath}:/app -w /app garage-test-image"
+            sh "docker run --rm -v ${dockerPath}:/app garage-test-image"
         }
     }
 }
