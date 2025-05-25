@@ -10,13 +10,18 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                echo '🧪 Running Tests...'
-                sh '''
-                    docker run --rm -v "%WORKSPACE%":/app -w /app python:3.10-slim bash -c "pip install pytest && pytest"
-                '''
+        steps {
+            echo '🧪 Running Tests...'
+            script {
+                def windowsPath = pwd()
+                def dockerPath = windowsPath.replaceAll('^([A-Z]):\\\\', '/$1/').replaceAll('\\\\', '/').toLowerCase()
+                sh """
+                    docker run --rm -v "${dockerPath}:/app" -w /app python:3.10-slim bash -c "pip install pytest && pytest"
+                """
             }
         }
+    }
+
 
 
         stage('Code Quality') {
