@@ -20,11 +20,13 @@ pipeline {
 docker build -t garage-test-image - <<EOF
 FROM python:3.10-slim
 WORKDIR /app
-COPY . .
+COPY app.py .
+COPY tests/ tests/
 RUN pip install pytest
 CMD ["pytest", "tests"]
 EOF
 '''
+
 
             sh "docker run --rm -v ${dockerPath}:/app garage-test-image"
         }
