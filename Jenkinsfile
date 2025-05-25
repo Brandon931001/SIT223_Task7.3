@@ -16,22 +16,19 @@ pipeline {
                     def windowsPath = pwd()
                     def dockerPath = windowsPath.replaceAll('^([A-Z]):\\\\', '/$1/').replaceAll('\\\\', '/').toLowerCase()
 
-                    sh """
-                        docker build -t garage-test-image - <<EOF
+                    sh '''docker build -t garage-test-image - <<EOF
         FROM python:3.10-slim
         WORKDIR /app
         COPY . .
         RUN pip install pytest
         CMD ["pytest"]
-        EOF
-                    """
+        EOF'''
 
-                    sh """
-                        docker run --rm -v "${dockerPath}:/app" -w /app garage-test-image
-                    """
+                    sh "docker run --rm -v ${dockerPath}:/app -w /app garage-test-image"
                 }
             }
         }
+
 
 
 
