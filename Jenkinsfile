@@ -55,7 +55,7 @@ pipeline {
             echo '🧹 Cleaning up Docker container...'
             script {
                 try {
-                    sh 'docker rm -f garage-app'
+                    sh 'docker rm -f garage-app || true'
                 } catch (err) {
                     echo "⚠️ No container to remove, likely skipped deploy: ${err.getMessage()}"
                 }
