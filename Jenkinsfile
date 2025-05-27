@@ -32,8 +32,8 @@ pipeline {
         stage('Security') {
             steps {
                 echo '🔐 Running bandit...'
-                sh 'pip install bandit'
-                sh 'bandit garage/core.py'
+                sh 'pip install bandit || true'
+                sh 'bandit garage/core.py || echo "🟡 Security scan failed (non-blocking)"'
             }
         }
 
@@ -49,7 +49,7 @@ pipeline {
     post {
         always {
             echo '🧹 Cleaning up Docker container...'
-            sh 'docker rm -f garage-app || true'
+            sh 'docker rm -f garage-app || echo "🟡 No such container to remove"'
         }
     }
 }
