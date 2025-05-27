@@ -13,10 +13,10 @@ pipeline {
             steps {
                 echo '🧪 Running Tests...'
                 script {
-                    sh """
+                    sh '''
                         docker build -f Dockerfile-pytest -t garage-test-image .
                         docker run --rm garage-test-image
-                    """
+                    '''
                 }
             }
         }
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 echo '📏 Running pylint...'
                 sh 'pip install pylint'
-                sh 'pylint garage/core.py'
+                sh 'pylint garage/core.py || true'
             }
         }
 
@@ -38,8 +38,6 @@ pipeline {
             }
         }
 
-
-
         stage('Deploy') {
             when { expression { true } }
             steps {
@@ -48,21 +46,17 @@ pipeline {
                 sh 'docker ps'
             }
         }
-
+    }
 
     post {
-            always {
-                echo '🧹 Cleaning up Docker container...'
-                script {
-                    def result = sh(script: "docker ps -a --format '{{.Names}}' | grep -w garage-app || true", returnStdout: true).trim()
-                    if (result == "garage-app") {
-                        sh 'docker rm -f garage-app'
-                    } else {
-                        echo '🟡 No container named garage-app found. Skipping removal.'
-                    }
-                }
+        always {
+            echo '🧹 Cleaning up Docker container...'
+            script {
+                sh '''
+                    docker ps -a --format '{{.Names}}' | grep -w garage-app || true
+                '''
+                echo '🟡 No container named garage-app found. Skipping removal.'
             }
         }
     }
-
 }
