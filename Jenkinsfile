@@ -17,7 +17,7 @@ pipeline {
             def dockerPath = windowsPath.replaceAll('^([A-Z]):\\\\', '/$1/').replaceAll('\\\\', '/').toLowerCase()
 
             sh """
-                docker build -f Dockerfile.test -t garage-test-image .
+                docker build -f Dockerfile-pytest -t garage-test-image .
                 docker run --rm -v ${dockerPath}:/app garage-test-image
             """
         }
