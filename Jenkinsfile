@@ -30,25 +30,25 @@ pipeline {
         }
 
         stage('Security') {
-            when {
-                expression { true } // always run
-            }
+            when { expression { true } }
             steps {
                 echo '🔐 Running bandit...'
-                sh 'pip install bandit || true'
+                sh 'pip install bandit'
                 sh 'bandit garage/core.py || true'
             }
         }
 
 
+
         stage('Deploy') {
+            when { expression { true } }
             steps {
                 echo '🚀 Running the app in Docker...'
-                sh 'docker run -d --name garage-app garage-system'
+                sh 'docker run -d --name garage-app garage-system || true'
                 sh 'docker ps'
             }
         }
-    }
+
 
     post {
             always {
