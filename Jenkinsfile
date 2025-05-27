@@ -21,15 +21,6 @@ pipeline {
     }
 }
 
-
-
-
-
-
-
-
-
-
         stage('Code Quality') {
             steps {
                 echo '📏 Running pylint...'
