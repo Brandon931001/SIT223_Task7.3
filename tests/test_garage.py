@@ -1,5 +1,5 @@
 
-from garage import Vehicle, Garage, add_vehicle
+from garage.core import Vehicle, Garage, add_vehicle
 
 
 def test_add_vehicle_success():
