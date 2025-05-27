@@ -30,12 +30,16 @@ pipeline {
         }
 
         stage('Security') {
+            when {
+                expression { true } // always run
+            }
             steps {
                 echo '🔐 Running bandit...'
                 sh 'pip install bandit || true'
-                sh 'bandit garage/core.py || echo "🟡 Security scan failed (non-blocking)"'
+                sh 'bandit garage/core.py || true'
             }
         }
+
 
         stage('Deploy') {
             steps {
@@ -49,7 +53,14 @@ pipeline {
     post {
         always {
             echo '🧹 Cleaning up Docker container...'
-            sh 'docker rm -f garage-app || echo "🟡 No such container to remove"'
+            script {
+                try {
+                    sh 'docker rm -f garage-app'
+                } catch (err) {
+                    echo "⚠️ No container to remove, likely skipped deploy: ${err.getMessage()}"
+                }
+            }
         }
     }
+
 }
