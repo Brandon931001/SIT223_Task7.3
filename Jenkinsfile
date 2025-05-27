@@ -51,16 +51,18 @@ pipeline {
     }
 
     post {
-        always {
-            echo '🧹 Cleaning up Docker container...'
-            script {
-                try {
-                    sh 'docker rm -f garage-app || true'
-                } catch (err) {
-                    echo "⚠️ No container to remove, likely skipped deploy: ${err.getMessage()}"
+            always {
+                echo '🧹 Cleaning up Docker container...'
+                script {
+                    def result = sh(script: "docker ps -a --format '{{.Names}}' | grep -w garage-app || true", returnStdout: true).trim()
+                    if (result == "garage-app") {
+                        sh 'docker rm -f garage-app'
+                    } else {
+                        echo '🟡 No container named garage-app found. Skipping removal.'
+                    }
                 }
             }
         }
-    }
+
 
 }
